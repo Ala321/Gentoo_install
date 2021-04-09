@@ -38,8 +38,8 @@ function mountsda {
 
 function getstage {
     cd /mnt/gentoo
-    LATEST=$(wget --quiet http://distfiles.gentoo.org/releases/amd64/autobuilds/latest-stage3-amd64-hardened.txt -O-| tail -n 1 | cut -d " " -f 1)
-    wget http://distfiles.gentoo.org/releases/amd64/autobuilds/$LATEST
+    LATEST=$(wget --quiet https://distfiles.gentoo.org/releases/amd64/autobuilds/latest-stage3-amd64-hardened.txt -O-| tail -n 1 | cut -d " " -f 1)
+    wget https://distfiles.gentoo.org/releases/amd64/autobuilds/$LATEST
     tar xpvf stage3-*.tar.xz --xattrs-include='*.*' --numeric-owner
 }
 function chrot {
