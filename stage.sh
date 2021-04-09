@@ -38,7 +38,8 @@ function mountsda {
 
 function getstage {
     cd /mnt/gentoo
-    wget https://bouncer.gentoo.org/fetch/root/all/releases/amd64/autobuilds/20201101T214503Z/hardened/stage3-amd64-hardened-20201101T214503Z.tar.xz
+    LATEST=$(wget --quiet http://distfiles.gentoo.org/releases/amd64/autobuilds/latest-stage3-amd64-hardened.txt -O-| tail -n 1 | cut -d " " -f 1)
+    wget http://distfiles.gentoo.org/releases/amd64/autobuilds/$LATEST
     tar xpvf stage3-*.tar.xz --xattrs-include='*.*' --numeric-owner
 }
 function chrot {
