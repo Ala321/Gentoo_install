@@ -66,6 +66,7 @@ emerge net-misc/ntp
 emerge app-misc/mc
 emerge net-analyzer/tcpdump
 emerge sys-apps/pciutils
+emerge sys-kernel/gentoo-sources
 }
 
 #resolver
