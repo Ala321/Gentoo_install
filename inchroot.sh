@@ -64,8 +64,8 @@ emerge --config sys-libs/timezone-data
 ln -sf /usr/share/zoneinfo/Europe/Brussels /etc/localtime
 emerge net-misc/ntp
 emerge app-misc/mc
-net-analyzer/tcpdump
-
+emerge net-analyzer/tcpdump
+emerge sys-apps/pciutils
 }
 
 #resolver
