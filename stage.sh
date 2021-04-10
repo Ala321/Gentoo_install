@@ -43,6 +43,7 @@ function getstage {
     tar xpvf stage3-*.tar.xz --xattrs-include='*.*' --numeric-owner
 }
 function chrot {
+    cp /etc/resolv.conf /mnt/gentoo/etc/
     mount --types proc /proc $DIR/proc
     mount --rbind /sys $DIR/sys
     mount --make-rslave $DIR/sys
