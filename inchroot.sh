@@ -1,8 +1,10 @@
 function makeconf {
 cp /usr/share/portage/config/make.conf.example /etc/portage/make.conf
+processor=$((($(cat /proc/cpuinfo | awk '/^processor/{print $3}' | tail -1))+1))
+echo $processor
 cat << EOF > /etc/portage/make.conf
 CFLAGS=" -O2 -pipe -fPIE -fstack-protector-all -fPIC -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2"
-CXXFLAGS="${CFLAGS}"
+CXXFLAGS="\${CFLAGS}"
 # WARNING: Changing your CHOST is not something that should be done lightly.
 # Please consult http://www.gentoo.org/doc/en/change-chost.xml before changing.
 CHOST="x86_64-pc-linux-gnu"
@@ -10,11 +12,10 @@ CHOST="x86_64-pc-linux-gnu"
 # buidling in addition to what is provided by the profile.
  #CPU_FLAGS_X86="mmx sse sse2"
 PORTDIR="/usr/portage"
-DISTDIR="${PORTDIR}/distfiles"
-PKGDIR="${PORTDIR}/packages"
-MAKEIOTS="-j40"
+DISTDIR="\${PORTDIR}/distfiles"
+PKGDIR="\${PORTDIR}/packages"
+MAKEIOTS="-j$processor"
 GENTOO_MIRRORS="http://ftp.vectranet.pl/gentoo/ ftp://ftp.vectranet.pl/gentoo/ rsync://ftp.vectranet.pl/gentoo/"
-
 LDFLAGS="-Wl,-z,now -Wl,-z,relro"
 #USE="bindist peer_perms"
 POLICY_TYPES="strict"
@@ -39,8 +40,38 @@ nameserver 172.17.0.2
 EOF
 }
 
+function sync {
+emerge-webrsync
+}
+function profile {
+plist=$(eselect profile list | grep hardened | grep stable | grep -v no-multilib | grep -v selinux | awk '{print $1}' |  sed 's/[^0-9]//g')
+eselect profile set $plist
+}
+function updateworld {
+emerge --deep --with-bdeps=y --changed-use --update -q @world
+}
+function setlocal {
+cat << EOF > /etc/locale.gen
+en_US.utf8
 
-resolver
+EOF
+locale-gen
+}
+function progs {
+echo "Europe/Warsaw" > /etc/timezone
+emerge --config sys-libs/timezone-data
+ln -sf /usr/share/zoneinfo/Europe/Brussels /etc/localtime
+emerge net-misc/ntp
+emerge app-misc/mc
+net-analyzer/tcpdump
 
+}
 
+#resolver
 #repos
+#makeconf
+#sync
+#profile
+updateworld
+setlocal
+#progs
