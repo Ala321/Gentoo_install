@@ -52,8 +52,7 @@ emerge --deep --with-bdeps=y --changed-use --update -q @world
 }
 function setlocal {
 cat << EOF > /etc/locale.gen
-en_US ISO-8859-1
-en_US.UTF-8 UTF-8
+en_US.utf8
 
 EOF
 locale-gen
@@ -64,16 +63,36 @@ emerge --config sys-libs/timezone-data
 ln -sf /usr/share/zoneinfo/Europe/Brussels /etc/localtime
 emerge net-misc/ntp
 emerge app-misc/mc
-emerge net-analyzer/tcpdump
-emerge sys-apps/pciutils
-emerge sys-kernel/gentoo-sources
+net-analyzer/tcpdump
+
 }
 
-#resolver
-#repos
-#makeconf
-#sync
-#profile
+function kernel {
+wget=$(wget --output-document - --quiet https://www.kernel.org/ | grep -C 5 "longterm" -m1 | grep tarball)
+echo $wget
+wget=${wget##*<a href=\"}
+wget=${wget%\" *}
+echo $wget
+cd /usr/src/
+wget --quiet $wget
+tar  -xf linux*.tar.xz
+
+}
+
+function grboot {
+emerge grub
+grub-install /dev/sda
+grub-mkconfig -o /boot/grub/grub.cfg
+}
+
+
+resolver
+repos
+makeconf
+sync
+profile
 updateworld
 setlocal
-#progs
+progs
+grboot
+kernel
