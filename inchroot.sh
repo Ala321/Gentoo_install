@@ -68,6 +68,7 @@ net-analyzer/tcpdump
 }
 
 function kernel {
+emerge bc
 wget=$(wget --output-document - --quiet https://www.kernel.org/ | grep -C 5 "longterm" -m1 | grep tarball)
 echo $wget
 wget=${wget##*<a href=\"}
