@@ -52,7 +52,7 @@ emerge --deep --with-bdeps=y --changed-use --update -q @world
 }
 function setlocal {
 cat << EOF > /etc/locale.gen
-en_US.utf8
+en_US.UTF-8 UTF-8 
 
 EOF
 locale-gen
